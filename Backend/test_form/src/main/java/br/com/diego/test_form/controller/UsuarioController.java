@@ -1,56 +1,70 @@
 package br.com.diego.test_form.controller;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import br.com.diego.test_form.model.UsuarioModel;
-import br.com.diego.test_form.services.UsuarioService;
+import br.com.diego.test_form.repository.UsuarioRepository;
 
+
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/")
 public class UsuarioController {
+	@Autowired
+    UsuarioRepository usuarioRepository;
 
-  UsuarioService usuarioService;
-  @PostMapping("/api/submit-form")
-  public ResponseEntity<String> submitForm(@RequestBody UsuarioModel usuarioModel) {
-      try {
-          // Lógica para processar e salvar os dados do formulário
-          usuarioService.createUsuario(usuarioModel);
-          usuarioService.getAllUsuarios();
-          // Exemplo de processamento: salvar os dados do formulário em um banco de dados
-          // Aqui, vamos apenas imprimir os dados recebidos para fins de demonstração
-          System.out.println("Dados do formulário recebidos:");
-          System.out.println("Nome de usuário: " + usuarioModel.getNome());
-          System.out.println("Senha: " + usuarioModel.getSenha());
-  
-          // Simulação de salvamento bem-sucedido
-          Boolean dadosSalvos = usuarioModel.getNome() != null && usuarioModel.getSenha() != null;
-  
-          if (dadosSalvos) {
-              // Retornar uma resposta de sucesso
-              return ResponseEntity.ok("Dados do formulário salvos com sucesso!");
-          } else {
-              // Retornar uma resposta de erro
-              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar os dados do formulário.");
-          }
-      } catch (Exception e) {
-          // Tratar qualquer exceção que possa ocorrer durante o processamento
-          // Por exemplo, validações de dados, erros de banco de dados, etc.
-          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar o formulário.");
-      }
-  }
-  @GetMapping("/submit-form")
-  public ModelAndView ver()
-  {
-    ModelAndView mv = new ModelAndView();
-    return mv;
-  }
+    @GetMapping("/Usuarios")
+	public List<UsuarioModel> getAllUsuarioModels(){
+		return usuarioRepository.findAll();
+	}
+    //CREATE
+    @PostMapping("/Usuarios")
+	public UsuarioModel createUsuario(@RequestBody UsuarioModel usuarioModel) {
+		return usuarioRepository.save(usuarioModel);
+	}
+    //READ
+    @GetMapping("/Usuarios/{id}")
+	public ResponseEntity<UsuarioModel> getUsuarioById(@PathVariable Long id) throws Exception {
+		UsuarioModel usuario = usuarioRepository.findById(id)
+				.orElseThrow(() -> new Exception("Usuario não existe com a id :" + id));
+		return ResponseEntity.ok(usuario);
+	}
+    //UPDATE
+    @PutMapping("/Usuarios/{id}")
+	public ResponseEntity<UsuarioModel> updateUsuario(@PathVariable Long id, @RequestBody UsuarioModel usuarioModelDetails) throws Exception{
+		UsuarioModel usuario = usuarioRepository.findById(id)
+				.orElseThrow(() -> new Exception("Usuario não existe com a id :" + id));
+		
+		usuario.setNome(usuarioModelDetails.getNome());
+		usuario.setSenha(usuarioModelDetails.getSenha());
+		usuario.setEmail(usuarioModelDetails.getEmail());
+		
+		UsuarioModel updatedUsuario = usuarioRepository.save(usuario);
+		return ResponseEntity.ok(updatedUsuario);
+	}
+    //DELETE
+    @DeleteMapping("/Usuarios/{id}")
+	public ResponseEntity<Map<String, Boolean>> deleteUsuario(@PathVariable Long id) throws Exception{
+		UsuarioModel usuario = usuarioRepository.findById(id)
+				.orElseThrow(() -> new Exception("Usuario não existe com a id :" + id));
+		usuarioRepository.delete(usuario);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return ResponseEntity.ok(response);
+	}
 
+  
 }

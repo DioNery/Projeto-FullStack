@@ -1,16 +1,14 @@
 package br.com.diego.test_form.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 import jakarta.persistence.*;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+
 @Entity
 @Table(name = "Usuarios")
 public class UsuarioModel
@@ -18,16 +16,27 @@ public class UsuarioModel
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
+
+        @Column(name = "nome")
         private String nome;
-        private String senha;
+
+        @Column(name = "email")
         private String email;
 
-        public List setLista(List<UsuarioModel> lista)
+        @Column(name = "senha")
+        private String senha;
+
+        public UsuarioModel(Long id, String nome, String email, String senha)
         {
-            this.nome = lista.get(0).getNome();
-            this.senha = lista.get(0).getSenha();
-            this.email = lista.get(0).getEmail();
-            return lista;
+            super();
+            this.id = id;
+            this.nome = nome;
+            this.email = email;
+            this.senha = senha;
+           
         }
+        
+
+       
 
 }

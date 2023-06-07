@@ -18,9 +18,4 @@ public class UsuarioService {
         return usuario.findAll();
     }
     
-    public List<UsuarioModel> obterUsuariosPeloNome()
-    {
-        
-        return usuario.findByNome("Teste");
-    }
 }
