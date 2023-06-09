@@ -10,20 +10,16 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "Usuarios")
 public class UsuarioModel
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(name = "nome")
         private String nome;
 
-        @Column(name = "email")
         private String email;
 
-        @Column(name = "senha")
         private String senha;
 
         public UsuarioModel(Long id, String nome, String email, String senha)

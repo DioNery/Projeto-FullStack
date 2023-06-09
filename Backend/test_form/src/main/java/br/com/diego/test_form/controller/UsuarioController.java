@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.diego.test_form.model.UsuarioModel;
+import org.springframework.http.HttpStatus;
 import br.com.diego.test_form.repository.UsuarioRepository;
 
 
@@ -26,12 +30,15 @@ public class UsuarioController {
 	@Autowired
     UsuarioRepository usuarioRepository;
 
-    @GetMapping("/Usuarios")
-	public List<UsuarioModel> getAllUsuarioModels(){
+   @RequestMapping(value = "/Usuarios", method = RequestMethod.GET)
+	@ResponseBody
+	public List<UsuarioModel> getAllUsuarioModels() {
 		return usuarioRepository.findAll();
 	}
     //CREATE
     @PostMapping("/Usuarios")
+	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseBody
 	public UsuarioModel createUsuario(@RequestBody UsuarioModel usuarioModel) {
 		return usuarioRepository.save(usuarioModel);
 	}
