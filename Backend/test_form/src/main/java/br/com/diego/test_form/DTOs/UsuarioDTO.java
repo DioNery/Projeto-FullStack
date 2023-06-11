@@ -11,5 +11,4 @@ public class UsuarioDTO {
     private Long id;
     private String nome;
     private String email;
-    private Long endereco_id;
 }
