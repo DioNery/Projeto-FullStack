@@ -3,6 +3,8 @@ package br.com.diego.test_form.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import br.com.diego.test_form.model.UsuarioModel;
@@ -13,10 +15,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioBD;
 
-    public List<UsuarioModel> obterUsuarios()
-    {
-        return usuarioBD.findAll();
-    }
+    
     public UsuarioModel getUsuarioBDById(Long id) throws Exception
     {
      UsuarioModel usuarioModel = usuarioBD.findById(id).orElseThrow(() -> new Exception("UsuarioModel não encontrado com o ID: " + id));
@@ -48,8 +47,18 @@ public class UsuarioService {
     {
         return usuarioBD.findById(id).get().getEmail();
     }
-    public void deletar(Long id) {
-        UsuarioModel sintomaDeletado = usuarioBD.findById(id).get();
-        usuarioBD.delete(sintomaDeletado);
+    public String getUsuarioByNome(String nome) 
+    {
+        return usuarioBD.findByNome(nome).getNome();
     }
+    public void deletar(Long id) {
+        usuarioBD.delete(usuarioBD.findById(id).get());
+    }
+    public List<UsuarioModel> obterUsuarios()
+    {
+        Sort sortById = Sort.by(Sort.Direction.ASC, "id");
+        PageRequest pageRequest = PageRequest.of(0, 50, sortById);
+        return usuarioBD.findAll(pageRequest).getContent();
+    }
+
 }

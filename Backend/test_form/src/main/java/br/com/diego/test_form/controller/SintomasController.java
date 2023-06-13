@@ -20,6 +20,7 @@ import br.com.diego.test_form.model.SintomasModel;
 
 import org.springframework.http.HttpStatus;
 import br.com.diego.test_form.services.SintomasService;
+
 @RestController
 @RequestMapping("/api/v2/")
 public class SintomasController {
@@ -67,7 +68,7 @@ public class SintomasController {
 				// .orElseThrow(() -> new Exception("Sintoma não existe com a id :" + id));
 		return ResponseEntity.ok(resposta);
 	}
-	@GetMapping("/Sintomas/dorDeCabeca/{id}")
+	@GetMapping("/Sintomas/dorMuscular/{id}")
 	@ResponseBody
 	public ResponseEntity<String> getSintomaDorMuscularById(@PathVariable Long id)  throws Exception {
 		Boolean verificar = sintomasService.getDorMuscularById(id);

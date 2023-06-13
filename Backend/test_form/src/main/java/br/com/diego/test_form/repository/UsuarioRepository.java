@@ -7,4 +7,5 @@ import br.com.diego.test_form.model.UsuarioModel;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
+    UsuarioModel findByNome(String nome);
 }

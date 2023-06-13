@@ -29,7 +29,6 @@ public class UsuarioModel
             this.nome = nome;
             this.email = email;
             this.senha = senha;
-           
         }
         
 
